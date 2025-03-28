@@ -1,13 +1,19 @@
 use std::{fs::File, io::Write, process::Command};
 
 fn main() {
-    let wave = wave();
-    let buf: &[u8] = bytemuck::cast_slice(&wave);
+    // let wave = wave();
+    // let buf: &[u8] = bytemuck::cast_slice(&wave);
+    //
+
+    let buf: Vec<u8> = wave()
+        .into_iter()
+        .flat_map(f32::to_le_bytes)
+        .collect();
 
     // TODO: proper error handling
 
     let mut file = File::create("output.bin").unwrap();
-    file.write_all(buf).unwrap();
+    file.write_all(&buf).unwrap();
 
     println!("wrote sound to output.bin");
     println!("playing sound");
